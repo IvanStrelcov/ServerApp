@@ -1,6 +1,7 @@
 var express = require('express');
 var cors = require('cors');
 var bodyParser = require('body-parser');
+var _ = require('lodash');
 var app = express();
 
 app.use(bodyParser.json());
@@ -11,6 +12,10 @@ app.use(bodyParser.urlencoded({
 app.use(cors());
 
 var cardlists = [];
+var cards = [];
+var todos = [];
+
+// logic of card list
 
 app.get('/', function (req, res) {
   res.send(cardlists);
@@ -18,14 +23,18 @@ app.get('/', function (req, res) {
 
 app.post('/rows', function (req, res) {
   const item = req.body.data;
-  cardlists.push(item);
-  res.send(item);
+  const data = {
+    id: _.uniqueId(),
+    cardlist: item
+  }
+  cardlists.push(data);
+  res.send(data);
 });
 
 app.delete('/rows/:id', function (req, res) {
-  const item = req.params.id;
-  cardlists.splice(item, 1);
-  res.send(200);
+  const id = req.params.id;
+  _.pullAllBy(cardlists, [{ 'id': id }], 'id');
+  res.send(id);
 });
 
 app.listen(3001);
