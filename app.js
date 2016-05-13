@@ -2,7 +2,36 @@ var express = require('express');
 var cors = require('cors');
 var bodyParser = require('body-parser');
 var _ = require('lodash');
+
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+var db = mongoose.connection;
 var app = express();
+
+mongoose.connect('mongodb://localhost/test');
+
+var rowSchema = new Schema({
+  cardlist: Array,
+});
+
+var Row = mongoose.model('Row', rowSchema);
+
+var cardSchema = new Schema({
+  cardlist_id: Schema.Types.ObjectId,
+  title: String,
+  todos: Array,
+  class: String,
+});
+
+var Card = mongoose.model('Card', cardSchema);
+
+var todoSchema = new Schema({
+  card_id: Schema.Types.ObjectId,
+  text: String,
+  done: Boolean,
+});
+
+var Todo = mongoose.model('Todo', todoSchema);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -14,13 +43,19 @@ app.use(cors());
 var cardlists = [];
 var cards = [];
 var todos = [];
-
 /* logic of card lists */
 
 /* get list of rows from cardlists array */
 
 app.get('/rows', function (req, res) {
-  res.send(cardlists);
+  Row.find().exec(function (err, docs) {
+    if (err) {
+      console.log(err);
+    } else {
+      console.log(docs);
+      res.send(docs);
+    }
+  });
 });
 
 /* add new row for cardlists array */
@@ -28,11 +63,12 @@ app.get('/rows', function (req, res) {
 app.post('/rows', function (req, res) {
   const item = req.body.data;
   const data = {
-    id: _.uniqueId('row_'),
     cardlist: item
   }
-  cardlists.push(data);
-  res.send(data);
+  Row.create(data).then( function(newRow) {
+    console.log(newRow);
+    res.send(data);
+  });
 });
 
 /* delete row from cardlists array*/
@@ -66,6 +102,7 @@ app.post('/card', function (req, res) {
 
 app.delete('/cards/:id', function (req, res) {
   const id = req.params.id;
+  _.pullAllBy(todos, [{ 'card_id': id }], 'card_id');
   _.pullAllBy(cards, [{ 'id': id }], 'id');
   res.send(id);
 });
@@ -124,6 +161,17 @@ app.put('/todos/status/:id', function (req, res) {
   _.find(todos, { 'id': id }).done = status;
   res.send(status);
 });
+
+
+
+
+
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log("we're connected!");
+});
+
+
 
 app.listen(3001, function(){
   console.log('server on localhost:3001');
