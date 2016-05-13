@@ -106,6 +106,25 @@ app.put('/cards/:id', function (req, res) {
   res.send(title);
 });
 
+/* logic of todo */
+/* change title of todo */
+
+app.put('/todos/:id', function (req, res) {
+  const id = req.params.id;
+  const title = req.body.title;
+  _.find(todos, { 'id': id }).title = title;
+  res.send(title);
+});
+
+/* change status of todo */
+
+app.put('/todos/status/:id', function (req, res) {
+  const id = req.params.id;
+  const status = req.body.status;
+  _.find(todos, { 'id': id }).done = status;
+  res.send(status);
+});
+
 app.listen(3001, function(){
   console.log('server on localhost:3001');
 });
