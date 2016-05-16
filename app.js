@@ -52,7 +52,6 @@ app.get('/rows', (req, res) => {
     if (err) {
       console.log(err);
     } else {
-      console.log(docs);
       res.send(docs);
     }
   });
@@ -78,7 +77,6 @@ app.delete('/rows/:id', function (req, res) {
     if (err) {
       console.log('eroor', err);
     } else {
-      console.log('data', data);
       res.send(id);
     }
   });
@@ -90,26 +88,41 @@ app.delete('/rows/:id', function (req, res) {
 
 app.get('/rows/:id', function (req, res) {
   const id = req.params.id;
-  const result = _.filter(cards, {cardlist_id: id});
-  res.send(result);
+  Card.find({cardlist_id: id}).exec( (err, docs) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(docs);
+    }
+  });
 });
 
 /* add new card in cards array */
 
 app.post('/card', function (req, res) {
   const item = req.body;
-  item.id = _.uniqueId('card_');
-  cards.push(item);
-  res.send(item);
+  Card.create(item).then( (result) => {
+    res.send(result);
+  });
 });
 
 /* delete card from cards array */
 
 app.delete('/cards/:id', function (req, res) {
   const id = req.params.id;
-  _.pullAllBy(todos, [{ 'card_id': id }], 'card_id');
-  _.pullAllBy(cards, [{ 'id': id }], 'id');
-  res.send(id);
+  Todo.remove({card_id: id}).exec((err, data) => {
+    if (err) {
+      console.log('error todo remove in card removing', err);
+    } else {
+      Card.remove({_id: id}).exec((err, data) => {
+        if (err) {
+          console.log('error in card remove', err);
+        } else {
+          res.send(id);
+        }
+      });
+    }
+  });
 });
 
 /* logic of card */
@@ -118,25 +131,13 @@ app.delete('/cards/:id', function (req, res) {
 
 app.get('/cards/:id', function (req, res) {
   const id = req.params.id;
-  const result = _.filter(todos, {card_id: id});
-  res.send(result);
-});
-
-/* add new todo in todos array */
-
-app.post('/todo', function (req, res) {
-  const item = req.body;
-  item.id = _.uniqueId('todo_');
-  todos.push(item);
-  res.send(item);
-});
-
-/* delete todo from todos array */
-
-app.delete('/todos/:id', function (req, res) {
-  const id = req.params.id;
-  _.pullAllBy(todos, [{ 'id': id }], 'id');
-  res.send(id);
+  Todo.find({card_id: id}).exec( (err, docs) => {
+    if (err) {
+      console.log('error in todo find', err);
+    } else {
+      res.send(docs);
+    }
+  });
 });
 
 /* change title of card */
@@ -144,8 +145,35 @@ app.delete('/todos/:id', function (req, res) {
 app.put('/cards/:id', function (req, res) {
   const id = req.params.id;
   const title = req.body.title;
-  _.find(cards, { 'id': id }).title = title;
-  res.send(title);
+  Card.findOneAndUpdate({_id: id}, {'title': title}).exec( (err, docs) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(title);
+    }
+  });
+});
+
+/* delete todo from todos array */
+
+app.delete('/todos/:id', function (req, res) {
+  const id = req.params.id;
+  Todo.remove({_id: id}).exec( (err, data) => {
+    if (err) {
+      console.log('eroor', err);
+    } else {
+      res.send(id);
+    }
+  });
+});
+
+/* add new todo in todos array */
+
+app.post('/todo', function (req, res) {
+  const item = req.body;
+  Todo.create(item).then( (result) => {
+    res.send(result);
+  });
 });
 
 /* logic of todo */
@@ -154,8 +182,13 @@ app.put('/cards/:id', function (req, res) {
 app.put('/todos/:id', function (req, res) {
   const id = req.params.id;
   const title = req.body.title;
-  _.find(todos, { 'id': id }).title = title;
-  res.send(title);
+  Todo.findOneAndUpdate({_id: id}, {'text': title}).exec( (err, docs) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(title);
+    }
+  });
 });
 
 /* change status of todo */
@@ -163,20 +196,14 @@ app.put('/todos/:id', function (req, res) {
 app.put('/todos/status/:id', function (req, res) {
   const id = req.params.id;
   const status = req.body.status;
-  _.find(todos, { 'id': id }).done = status;
-  res.send(status);
+  Todo.findOneAndUpdate({_id: id}, {'done': status}).exec( (err, docs) => {
+    if (err) {
+      console.log(err);
+    } else {
+      res.send(status);
+    }
+  });
 });
-
-
-
-
-
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
-  console.log("we're connected!");
-});
-
-
 
 app.listen(3001, function(){
   console.log('server on localhost:3001');
