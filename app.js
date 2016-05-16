@@ -40,9 +40,6 @@ app.use(bodyParser.urlencoded({
 
 app.use(cors());
 
-var cardlists = [];
-var cards = [];
-var todos = [];
 /* logic of card lists */
 
 /* get list of rows from cardlists array */
@@ -71,7 +68,7 @@ app.post('/rows', (req, res) => {
 
 /* delete row from cardlists array*/
 
-app.delete('/rows/:id', function (req, res) {
+app.delete('/rows/:id', (req, res) => {
   const id = req.params.id;
   Row.remove({_id: id}).exec( (err, data) => {
     if (err) {
@@ -86,7 +83,7 @@ app.delete('/rows/:id', function (req, res) {
 
 /* get list of cards for every row from cards array */
 
-app.get('/rows/:id', function (req, res) {
+app.get('/rows/:id', (req, res) => {
   const id = req.params.id;
   Card.find({cardlist_id: id}).exec( (err, docs) => {
     if (err) {
@@ -99,7 +96,7 @@ app.get('/rows/:id', function (req, res) {
 
 /* add new card in cards array */
 
-app.post('/card', function (req, res) {
+app.post('/card', (req, res) => {
   const item = req.body;
   Card.create(item).then( (result) => {
     res.send(result);
@@ -108,7 +105,7 @@ app.post('/card', function (req, res) {
 
 /* delete card from cards array */
 
-app.delete('/cards/:id', function (req, res) {
+app.delete('/cards/:id', (req, res) => {
   const id = req.params.id;
   Todo.remove({card_id: id}).exec((err, data) => {
     if (err) {
@@ -129,7 +126,7 @@ app.delete('/cards/:id', function (req, res) {
 
 /* get list of todos for every card from todos array*/
 
-app.get('/cards/:id', function (req, res) {
+app.get('/cards/:id', (req, res) => {
   const id = req.params.id;
   Todo.find({card_id: id}).exec( (err, docs) => {
     if (err) {
@@ -142,7 +139,7 @@ app.get('/cards/:id', function (req, res) {
 
 /* change title of card */
 
-app.put('/cards/:id', function (req, res) {
+app.put('/cards/:id', (req, res) => {
   const id = req.params.id;
   const title = req.body.title;
   Card.findOneAndUpdate({_id: id}, {'title': title}).exec( (err, docs) => {
@@ -156,7 +153,7 @@ app.put('/cards/:id', function (req, res) {
 
 /* delete todo from todos array */
 
-app.delete('/todos/:id', function (req, res) {
+app.delete('/todos/:id', (req, res) => {
   const id = req.params.id;
   Todo.remove({_id: id}).exec( (err, data) => {
     if (err) {
@@ -169,7 +166,7 @@ app.delete('/todos/:id', function (req, res) {
 
 /* add new todo in todos array */
 
-app.post('/todo', function (req, res) {
+app.post('/todo', (req, res) => {
   const item = req.body;
   Todo.create(item).then( (result) => {
     res.send(result);
@@ -179,7 +176,7 @@ app.post('/todo', function (req, res) {
 /* logic of todo */
 /* change title of todo */
 
-app.put('/todos/:id', function (req, res) {
+app.put('/todos/:id', (req, res) => {
   const id = req.params.id;
   const title = req.body.title;
   Todo.findOneAndUpdate({_id: id}, {'text': title}).exec( (err, docs) => {
@@ -193,7 +190,7 @@ app.put('/todos/:id', function (req, res) {
 
 /* change status of todo */
 
-app.put('/todos/status/:id', function (req, res) {
+app.put('/todos/status/:id', (req, res) => {
   const id = req.params.id;
   const status = req.body.status;
   Todo.findOneAndUpdate({_id: id}, {'done': status}).exec( (err, docs) => {
@@ -205,6 +202,6 @@ app.put('/todos/status/:id', function (req, res) {
   });
 });
 
-app.listen(3001, function(){
+app.listen(3001, () => {
   console.log('server on localhost:3001');
 });
