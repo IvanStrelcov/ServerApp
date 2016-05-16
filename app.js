@@ -47,8 +47,8 @@ var todos = [];
 
 /* get list of rows from cardlists array */
 
-app.get('/rows', function (req, res) {
-  Row.find().exec(function (err, docs) {
+app.get('/rows', (req, res) => {
+  Row.find().exec( (err, docs) => {
     if (err) {
       console.log(err);
     } else {
@@ -60,14 +60,13 @@ app.get('/rows', function (req, res) {
 
 /* add new row for cardlists array */
 
-app.post('/rows', function (req, res) {
+app.post('/rows', (req, res) => {
   const item = req.body.data;
   const data = {
     cardlist: item
   }
-  Row.create(data).then( function(newRow) {
-    console.log(newRow);
-    res.send(data);
+  Row.create(data).then( (result) => {
+    res.send(result);
   });
 });
 
@@ -75,15 +74,21 @@ app.post('/rows', function (req, res) {
 
 app.delete('/rows/:id', function (req, res) {
   const id = req.params.id;
-  _.pullAllBy(cardlists, [{ 'id': id }], 'id');
-  res.send(id);
+  Row.remove({_id: id}).exec( (err, data) => {
+    if (err) {
+      console.log('eroor', err);
+    } else {
+      console.log('data', data);
+      res.send(id);
+    }
+  });
 });
 
 /* logic of card list */
 
 /* get list of cards for every row from cards array */
 
-app.get('/cardlist/:id', function (req, res) {
+app.get('/rows/:id', function (req, res) {
   const id = req.params.id;
   const result = _.filter(cards, {cardlist_id: id});
   res.send(result);
