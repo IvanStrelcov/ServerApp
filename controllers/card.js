@@ -8,7 +8,7 @@ class Card {
     const id = req.params.id;
     card.get(id).exec()
       .then(data => {
-        res.send(data);
+        res.json(data);
       })
       .catch(next);
   }
@@ -16,7 +16,7 @@ class Card {
     const item = req.body;
     card.post(item)
       .then(result => {
-        res.send(result);
+        res.json(result);
       })
       .catch(next);
   }
@@ -26,7 +26,7 @@ class Card {
       .then(data => {
         card.delete(id).exec()
           .then(data => {
-            res.send(id);
+            res.json(id);
           })
           .catch(next);
       })
@@ -37,7 +37,7 @@ class Card {
     const title = req.body.title;
     card.changeTitle(id, title).exec()
      .then(data => {
-       res.send(title);
+       res.json(title);
      })
      .catch(next);
   }

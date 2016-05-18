@@ -17,7 +17,7 @@ class Row {
     }
     row.post(data)
       .then( (result) => {
-        res.send(result);
+        res.json(result);
       })
       .catch(next);
   }
@@ -25,7 +25,7 @@ class Row {
     const id = req.params.id;
     row.delete(id).exec()
       .then( data => {
-        res.send(id);
+        res.json(id);
       })
       .catch(next);
   }

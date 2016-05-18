@@ -7,7 +7,7 @@ class Todo {
     const id = req.params.id;
     todo.get(id).exec()
       .then(data => {
-        res.send(data);
+        res.json(data);
       })
       .catch(next);
   }
@@ -15,7 +15,7 @@ class Todo {
     const item = req.body;
     todo.post(item)
       .then( result => {
-        res.send(result);
+        res.json(result);
       })
       .catch(next);
   }
@@ -23,7 +23,7 @@ class Todo {
     const id = req.params.id;
     todo.delete(id).exec()
       .then(data => {
-        res.send(id);
+        res.json(id);
       })
       .catch(next);
   }
@@ -32,7 +32,7 @@ class Todo {
     const title = req.body.title;
     todo.changeTitle(id, title).exec()
       .then( data => {
-        res.send(title);
+        res.json(title);
       })
       .catch(next);
   }
@@ -41,7 +41,7 @@ class Todo {
     const status = req.body.status;
     todo.changeStatus(id, status).exec()
       .then( data => {
-        res.send(status);
+        res.json(status);
       })
       .catch(next);
   }
