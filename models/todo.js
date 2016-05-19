@@ -1,5 +1,3 @@
-'use strict';
-
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -10,27 +8,27 @@ const todoSchema = new Schema({
 });
 
 todoSchema.statics.get = function (id) {
-  return this.find({card_id: id});
-}
+  return this.find({ card_id: id });
+};
 
 todoSchema.statics.post = function (item) {
   return this.create(item);
-}
+};
 
 todoSchema.statics.delete = function (id) {
-  return this.remove({_id: id});
-}
+  return this.remove({ _id: id });
+};
 
 todoSchema.statics.deleteTodos = function (id) {
-  return this.remove({card_id: id});
-}
+  return this.remove({ card_id: id });
+};
 
 todoSchema.statics.changeTitle = function (id, title) {
-  return this.findOneAndUpdate({_id: id}, {'text': title});
-}
+  return this.findOneAndUpdate({ _id: id }, { text: title });
+};
 
 todoSchema.statics.changeStatus = function (id, status) {
-  return this.findOneAndUpdate({_id: id}, {'done': status});
-}
+  return this.findOneAndUpdate({ _id: id }, { done: status });
+};
 
 mongoose.model('Todo', todoSchema);

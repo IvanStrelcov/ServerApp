@@ -1,9 +1,6 @@
-"use strict";
-
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const config = require('./config');
 
 require('./lib/mongo');
@@ -25,13 +22,13 @@ app.use('/rows', rows);
 app.use('/cards', cards);
 app.use('/todos', todos);
 
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
+app.use((req, res, next) => {
+  const err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   res.status(err.status || 500);
   res.json('error', {
     message: err.message,

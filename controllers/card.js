@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 const mongoose = require('mongoose');
 const card = mongoose.model('Card');
 const todo = mongoose.model('Todo');
@@ -23,9 +23,9 @@ class Card {
   delete(req, res, next) {
     const id = req.params.id;
     todo.deleteTodos(id).exec()
-      .then(data => {
+      .then(() => {
         card.delete(id).exec()
-          .then(data => {
+          .then(() => {
             res.json(id);
           })
           .catch(next);
@@ -36,7 +36,7 @@ class Card {
     const id = req.params.id;
     const title = req.body.title;
     card.changeTitle(id, title).exec()
-     .then(data => {
+     .then(() => {
        res.json(title);
      })
      .catch(next);

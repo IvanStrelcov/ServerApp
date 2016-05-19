@@ -1,5 +1,3 @@
-'use strict';
-
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -11,7 +9,7 @@ const cardSchema = new Schema({
 });
 
 cardSchema.statics.get = function (id) {
-  return this.find({cardlist_id: id});
+  return this.find({ cardlist_id: id });
 };
 
 cardSchema.statics.post = function (item) {
@@ -19,11 +17,11 @@ cardSchema.statics.post = function (item) {
 };
 
 cardSchema.statics.delete = function (id) {
-  return this.remove({_id: id});
+  return this.remove({ _id: id });
 };
 
 cardSchema.statics.changeTitle = function (id, title) {
-  return this.findOneAndUpdate({_id: id}, {'title': title});
+  return this.findOneAndUpdate({ _id: id }, { title: title });
 };
 
 mongoose.model('Card', cardSchema);
