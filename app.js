@@ -4,16 +4,15 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const config = require('./config');
 
-require('./shemas');
+require('./lib/mongo');
 
 const rows = require('./routes/rows');
 const cards = require('./routes/cards');
 const todos = require('./routes/todos');
 
 const app = express();
-
-mongoose.connect('mongodb://localhost/test');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
@@ -40,6 +39,9 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(3001, () => {
-  console.log('server on localhost:3001');
+app.listen(config.app.port, err => {
+  if (err) {
+    console.log(err);
+  }
+  console.log('Server is started on port: ' + config.app.port);
 });

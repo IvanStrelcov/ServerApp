@@ -1,0 +1,20 @@
+{
+  "production": {
+    "mongoose": {
+      "uri": "localhost/test"
+    }
+  },
+  "test": {
+    "mongoose": {
+      "uri": "localhost/test"
+    }
+  },
+  "development": {
+    "app": {
+      "port": 3000
+    },
+    "mongoose": {
+      "uri": "localhost/test"
+    }
+  }
+}

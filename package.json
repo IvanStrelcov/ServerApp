@@ -4,13 +4,17 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "NODE_ENV='development' nodemon app.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.13.4",
+    "glob": "^7.0.3",
     "lodash": "^4.12.0",
     "mongoose": "^4.4.16"
+  },
+  "devDependencies": {
+    "nodemon": "^1.9.2"
   }
 }
